@@ -13,6 +13,7 @@ public class MazeGenerator : MonoBehaviour
 
     // usar un techo
     public bool GenerateCeiling = false;
+    public bool RandomCeiling = true;
     public bool GenerateFullCeiling = true;
     public bool GenerateFullFloor = true;
     // tamaño del laberinto
@@ -39,6 +40,16 @@ public class MazeGenerator : MonoBehaviour
         if (FloorPrefab == null)
         {
             
+        }
+
+        bool createCeiling = false;
+        if (GenerateCeiling)
+        {
+            createCeiling = true;
+            if (RandomCeiling)
+            {
+            createCeiling = Random.value < 0.5;
+            }
         }
 
         // asegurar que la cantidad de tiles a quitar existen en el laberinto
@@ -73,7 +84,7 @@ public class MazeGenerator : MonoBehaviour
 					_playerPlaced = true;
 				}
 
-				if (GenerateCeiling)
+				if (createCeiling)
                 {
                     if (!_maze[x, y] || GenerateFullCeiling)
                     {

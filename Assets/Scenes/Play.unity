@@ -351,9 +351,10 @@ MonoBehaviour:
   WallParent: {fileID: 1962351247}
   CeilingParent: {fileID: 436931834}
   PlayerController: {fileID: 728345508}
-  GenerateCeiling: 0
-  GenerateFullCeiling: 0
-  GenerateFullFloor: 0
+  GenerateCeiling: 1
+  RandomCeiling: 1
+  GenerateFullCeiling: 1
+  GenerateFullFloor: 1
   MazeSize: {x: 50, y: 50}
   BlockScale: 2
 --- !u!4 &1985135163
