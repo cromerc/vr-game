@@ -53,7 +53,14 @@ public class VrModeController : MonoBehaviour
     {
         get
         {
-            return XRGeneralSettings.Instance.Manager.isInitializationComplete;
+            if (XRGeneralSettings.Instance != null)
+            {
+                return XRGeneralSettings.Instance.Manager.isInitializationComplete;
+            }
+            else {
+                return false;
+            }
+            //return XRGeneralSettings.Instance.Manager.isInitializationComplete;
         }
     }
 

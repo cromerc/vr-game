@@ -73,7 +73,7 @@ public class MazeGenerator : MonoBehaviour
                 {
 					CreateChildPrefab(WallPrefab, WallParent, y * BlockScale, 1 * BlockScale, x * BlockScale);
 					CreateChildPrefab(WallPrefab, WallParent, y * BlockScale, 2 * BlockScale, x * BlockScale);
-					CreateChildPrefab(WallPrefab, WallParent, y * BlockScale, 3 * BlockScale, x * BlockScale);
+					//CreateChildPrefab(WallPrefab, WallParent, y * BlockScale, 3 * BlockScale, x * BlockScale);
 				}
                 else if (!_playerPlaced && _spawnPoints[x, y])
                 {
@@ -88,7 +88,7 @@ public class MazeGenerator : MonoBehaviour
                 {
                     if (!_maze[x, y] || GenerateFullCeiling)
                     {
-					    CreateChildPrefab(CeilingPrefab, CeilingParent, y * BlockScale, 4 * BlockScale, x * BlockScale);
+					    CreateChildPrefab(CeilingPrefab, CeilingParent, y * BlockScale, 3 * BlockScale, x * BlockScale);
                     }
 				}
 			}
