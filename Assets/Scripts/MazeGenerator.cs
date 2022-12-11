@@ -6,10 +6,15 @@ public class MazeGenerator : MonoBehaviour
     public GameObject WallPrefab;
     public GameObject CeilingPrefab;
 
+    public GameObject MainParent;
+    public GameObject EnemyParent;
     public GameObject FloorParent;
     public GameObject WallParent;
     public GameObject CeilingParent;
     public GameObject PlayerController;
+
+    public GameObject EnemyPrefab;
+    public GameObject Enemy;
 
     // usar un techo
     public bool GenerateCeiling = false;
@@ -34,6 +39,8 @@ public class MazeGenerator : MonoBehaviour
     private bool[,] _spawnPoints;
     // the unsafe spawn points may not be reachable, goals should not be placed in them
     private bool[,] _unsafeSpawnPoints;
+
+    private bool _enemyPlaced = false;
 
     public void Start()
     {
@@ -78,10 +85,18 @@ public class MazeGenerator : MonoBehaviour
                 else if (!_playerPlaced && _spawnPoints[x, y])
                 {
 					PlayerController.transform.SetPositionAndRotation(
-						new Vector3(x * BlockScale, 1 * BlockScale, y * BlockScale), Quaternion.identity
+						new Vector3(x * BlockScale, 1.5f * BlockScale, y * BlockScale), Quaternion.identity
 					);
 
 					_playerPlaced = true;
+				}
+                else if (!_enemyPlaced && _spawnPoints[x, y])
+                {
+                    float width = Enemy.GetComponent<SphereCollider>().bounds.size.x;
+                    float length = Enemy.GetComponent<SphereCollider>().bounds.size.z;
+                    Enemy.transform.position = new Vector3(x * BlockScale + BlockScale / 2 - width / 2, 1 * BlockScale, y * BlockScale + BlockScale / 2 - length / 2);
+
+					_enemyPlaced = true;
 				}
 
 				if (createCeiling)
