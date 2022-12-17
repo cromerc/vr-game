@@ -17,7 +17,7 @@ RenderSettings:
   m_Fog: 1
   m_FogColor: {r: 0, g: 0, b: 0, a: 1}
   m_FogMode: 3
-  m_FogDensity: 0.3
+  m_FogDensity: 0.1
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
@@ -411,12 +411,12 @@ MonoBehaviour:
   WallParent: {fileID: 1962351247}
   CeilingParent: {fileID: 436931834}
   PlayerController: {fileID: 2036056312876339393}
-  EnemyPrefab: {fileID: 6928192807407651279, guid: 39c46a5fcab69eafca096b4ab17ccb38, type: 3}
+  EnemyPrefab: {fileID: 1352214995452808518, guid: 307b9c78623e4fecfa7e9861970a1fe6, type: 3}
   GenerateCeiling: 1
   RandomCeiling: 1
   GenerateFullCeiling: 1
   GenerateFullFloor: 1
-  MazeSize: {x: 20, y: 20}
+  MazeSize: {x: 50, y: 50}
   BlockScale: 2
 --- !u!4 &1985135163
 Transform:

@@ -89,14 +89,15 @@ public class MazeGenerator : MonoBehaviour
 						new Vector3(y * BlockScale, 1.5f * BlockScale, x * BlockScale), Quaternion.identity
 					);
 				}
-                else if (_spawnPoints[x, y] == SpawnEntities.Enemy)
+                else if (EnemyPrefab && _spawnPoints[x, y] == SpawnEntities.Enemy)
                 {
                     var enemy = CreateChildPrefab(EnemyPrefab, EnemyParent, 0, 0, 0);
 
                     float width = enemy.GetComponent<SphereCollider>().bounds.size.x;
                     float length = enemy.GetComponent<SphereCollider>().bounds.size.z;
-                    enemy.transform.position = new Vector3(y * BlockScale + BlockScale / 2 - width / 2, 1 * BlockScale, x * BlockScale + BlockScale / 2 - length / 2);
-                    enemy.transform.rotation = Quaternion.AngleAxis(38, Vector3.up);
+                    width =  enemy.GetComponent<SphereCollider>().radius;
+                    enemy.transform.position = new Vector3(y * BlockScale + (BlockScale / 2 - width), 1 * BlockScale, x * BlockScale + (BlockScale / 2));
+                    enemy.GetComponent<Boo>().SetMaze(_maze, new Vector2Int(x, y), BlockScale);
                 }
 
 				if (createCeiling)
@@ -116,7 +117,11 @@ public class MazeGenerator : MonoBehaviour
         _spawnPoints = new SpawnEntities[MazeSize.x, MazeSize.y];
 
         _tilesToRemove = Mathf.FloorToInt((MazeSize.x - 2) * (MazeSize.y - 2) * 0.40f);
-        _enemiesToAdd = Mathf.FloorToInt(_tilesToRemove * 0.03f);
+        _enemiesToAdd = Mathf.FloorToInt(_tilesToRemove * 0.01f);
+        if (_enemiesToAdd == 0)
+        {
+            _enemiesToAdd = 1;
+        }
 
         // inicializar con todos los muros
         for (int x = 0; x < MazeSize.x; x++)
