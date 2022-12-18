@@ -186,8 +186,8 @@ public class MazeGenerator : MonoBehaviour
 
         while (true)
         {
-            _mazeCoords.x = Random.Range((MazeSize.x - 2) / 2, MazeSize.x - 2);
-            _mazeCoords.y = Random.Range((MazeSize.y - 2) / 2, MazeSize.y - 2);
+            _mazeCoords.x = Random.Range((MazeSize.x - 2) / 8, MazeSize.x - 2);
+            _mazeCoords.y = Random.Range((MazeSize.y - 2) / 8, MazeSize.y - 2);
             if (_spawnPoints[_mazeCoords.x, _mazeCoords.y] == SpawnEntities.None)
             {
                 _spawnPoints[_mazeCoords.x, _mazeCoords.y] = SpawnEntities.Gem;
@@ -197,8 +197,8 @@ public class MazeGenerator : MonoBehaviour
 
         while (true)
         {
-            _mazeCoords.x = Random.Range((MazeSize.x - 2) / 2, MazeSize.x - 2);
-            _mazeCoords.y = Random.Range((MazeSize.y - 2) / 2, MazeSize.y - 2);
+            _mazeCoords.x = Random.Range((MazeSize.x - 2) / 8, MazeSize.x - 2);
+            _mazeCoords.y = Random.Range((MazeSize.y - 2) / 8, MazeSize.y - 2);
             if (_spawnPoints[_mazeCoords.x, _mazeCoords.y] == SpawnEntities.None)
             {
                 _spawnPoints[_mazeCoords.x, _mazeCoords.y] = SpawnEntities.Portal;

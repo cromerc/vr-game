@@ -334,7 +334,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5119cdd3b55d3131fb5dd4e61736d900, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 1.5
 --- !u!135 &1352214995452808519
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -346,7 +345,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.6
   m_Center: {x: -0.5, y: 0.5, z: -0.9}
 --- !u!1 &1352214995461021102
 GameObject:
