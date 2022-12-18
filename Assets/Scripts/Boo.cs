@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Boo : MonoBehaviour
 {
@@ -179,6 +180,14 @@ public class Boo : MonoBehaviour
                 _previousDirection = _direction;
                 _direction = Direction.None;
             }
+        }
+    }
+
+    private void OnTriggerEnter(Collider collider)
+    {
+        if (collider.tag == "Player")
+        {
+            SceneManager.LoadScene("Dead");
         }
     }
 
