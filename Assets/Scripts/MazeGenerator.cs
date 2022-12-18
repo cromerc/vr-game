@@ -6,10 +6,14 @@ public class MazeGenerator : MonoBehaviour
     public GameObject WallPrefab;
     public GameObject CeilingPrefab;
 
+    public GameObject MainParent;
+    public GameObject EnemyParent;
     public GameObject FloorParent;
     public GameObject WallParent;
     public GameObject CeilingParent;
     public GameObject PlayerController;
+
+    public GameObject EnemyPrefab;
 
     // usar un techo
     public bool GenerateCeiling = false;
@@ -27,28 +31,32 @@ public class MazeGenerator : MonoBehaviour
     // cuadros a quitar
     private int _tilesToRemove = 1;
 
+    private int _enemiesToAdd = 1;
+
     private Vector2Int _mazeCoords = new(4, 1);
 
-    private bool _playerPlaced = false;
-
-    private bool[,] _spawnPoints;
+    private SpawnEntities[,] _spawnPoints;
     // the unsafe spawn points may not be reachable, goals should not be placed in them
-    private bool[,] _unsafeSpawnPoints;
+    private SpawnEntities[,] _unsafeSpawnPoints;
+
+    private enum SpawnEntities {
+        Blocked,
+        None,
+        Player,
+        Gem,
+        Enemy,
+        Portal
+    }
 
     public void Start()
     {
-        if (FloorPrefab == null)
-        {
-            
-        }
-
         bool createCeiling = false;
         if (GenerateCeiling)
         {
             createCeiling = true;
             if (RandomCeiling)
             {
-            createCeiling = Random.value < 0.5;
+                createCeiling = Random.value < 0.5;
             }
         }
 
@@ -75,14 +83,22 @@ public class MazeGenerator : MonoBehaviour
 					CreateChildPrefab(WallPrefab, WallParent, y * BlockScale, 2 * BlockScale, x * BlockScale);
 					//CreateChildPrefab(WallPrefab, WallParent, y * BlockScale, 3 * BlockScale, x * BlockScale);
 				}
-                else if (!_playerPlaced && _spawnPoints[x, y])
+                else if (_spawnPoints[x, y] == SpawnEntities.Player)
                 {
 					PlayerController.transform.SetPositionAndRotation(
-						new Vector3(x * BlockScale, 1 * BlockScale, y * BlockScale), Quaternion.identity
+						new Vector3(y * BlockScale, 1.5f * BlockScale, x * BlockScale), Quaternion.identity
 					);
-
-					_playerPlaced = true;
 				}
+                else if (EnemyPrefab && _spawnPoints[x, y] == SpawnEntities.Enemy)
+                {
+                    var enemy = CreateChildPrefab(EnemyPrefab, EnemyParent, 0, 0, 0);
+
+                    float width = enemy.GetComponent<SphereCollider>().bounds.size.x;
+                    float length = enemy.GetComponent<SphereCollider>().bounds.size.z;
+                    width =  enemy.GetComponent<SphereCollider>().radius;
+                    enemy.transform.position = new Vector3(y * BlockScale + (BlockScale / 2 - width), 1 * BlockScale, x * BlockScale + (BlockScale / 2));
+                    enemy.GetComponent<Boo>().SetMaze(_maze, new Vector2Int(x, y), BlockScale);
+                }
 
 				if (createCeiling)
                 {
@@ -98,9 +114,14 @@ public class MazeGenerator : MonoBehaviour
     private bool[,] GenerateMaze()
     {
         bool[,] maze = new bool[MazeSize.x, MazeSize.y];
-        _spawnPoints = new bool[MazeSize.x, MazeSize.y];
+        _spawnPoints = new SpawnEntities[MazeSize.x, MazeSize.y];
 
         _tilesToRemove = Mathf.FloorToInt((MazeSize.x - 2) * (MazeSize.y - 2) * 0.40f);
+        _enemiesToAdd = Mathf.FloorToInt(_tilesToRemove * 0.01f);
+        if (_enemiesToAdd == 0)
+        {
+            _enemiesToAdd = 1;
+        }
 
         // inicializar con todos los muros
         for (int x = 0; x < MazeSize.x; x++)
@@ -108,12 +129,12 @@ public class MazeGenerator : MonoBehaviour
             for (int y = 0; y < MazeSize.y; y++)
             {
                 maze[x, y] = true;
-                _spawnPoints[x, y] = false;
+                _spawnPoints[x, y] = SpawnEntities.Blocked;
             }
         }
 
+        bool playerAdded = false;
         int tilesRemoved = 0;
-
         while (tilesRemoved < _tilesToRemove)
         {
             int xDirection = 0;
@@ -138,9 +159,50 @@ public class MazeGenerator : MonoBehaviour
                 if (maze[_mazeCoords.x, _mazeCoords.y])
                 {
                     maze[_mazeCoords.x, _mazeCoords.y] = false;
-                    _spawnPoints[_mazeCoords.x, _mazeCoords.y] = true;
+                    if (!playerAdded)
+                    {
+                        _spawnPoints[_mazeCoords.x, _mazeCoords.y] = SpawnEntities.Player;
+                        playerAdded = true;
+                    }
+                    else
+                    {
+                        _spawnPoints[_mazeCoords.x, _mazeCoords.y] = SpawnEntities.None;
+                    }
                     tilesRemoved++;
                 }
+            }
+        }
+
+        while (_enemiesToAdd > 0)
+        {
+            _mazeCoords.x = Random.Range((MazeSize.x - 2) / 2, MazeSize.x - 2);
+            _mazeCoords.y = Random.Range((MazeSize.y - 2) / 2, MazeSize.y - 2);
+            if (_spawnPoints[_mazeCoords.x, _mazeCoords.y] == SpawnEntities.None)
+            {
+                _spawnPoints[_mazeCoords.x, _mazeCoords.y] = SpawnEntities.Enemy;
+                _enemiesToAdd--;
+            }
+        }
+
+        while (true)
+        {
+            _mazeCoords.x = Random.Range((MazeSize.x - 2) / 2, MazeSize.x - 2);
+            _mazeCoords.y = Random.Range((MazeSize.y - 2) / 2, MazeSize.y - 2);
+            if (_spawnPoints[_mazeCoords.x, _mazeCoords.y] == SpawnEntities.None)
+            {
+                _spawnPoints[_mazeCoords.x, _mazeCoords.y] = SpawnEntities.Gem;
+                break;
+            }
+        }
+
+        while (true)
+        {
+            _mazeCoords.x = Random.Range((MazeSize.x - 2) / 2, MazeSize.x - 2);
+            _mazeCoords.y = Random.Range((MazeSize.y - 2) / 2, MazeSize.y - 2);
+            if (_spawnPoints[_mazeCoords.x, _mazeCoords.y] == SpawnEntities.None)
+            {
+                _spawnPoints[_mazeCoords.x, _mazeCoords.y] = SpawnEntities.Portal;
+                break;
             }
         }
 
@@ -170,7 +232,7 @@ public class MazeGenerator : MonoBehaviour
             if (maze[x, startPoint.y + 1] && maze[x, startPoint.y - 1] && maze[x + 1, startPoint.y])
             {
                 maze[x, startPoint.y] = false;
-                _unsafeSpawnPoints[x, startPoint.y] = true;
+                _unsafeSpawnPoints[x, startPoint.y] = SpawnEntities.None;
                 maze = RemoveYTillCorridor(maze, new(x, startPoint.y));
             }
             x++;
@@ -186,15 +248,16 @@ public class MazeGenerator : MonoBehaviour
         while (y < MazeSize.y - 1 && maze[startPoint.x, y + 1])
         {
             maze[startPoint.x, y] = false;
-            _unsafeSpawnPoints[startPoint.x, y] = true;
+            _unsafeSpawnPoints[startPoint.x, y] = SpawnEntities.None;
             y++;
         }
 
         return maze;
     }
 
-    private void CreateChildPrefab(GameObject prefab, GameObject parent, float x, float y, float z) {
+    private GameObject CreateChildPrefab(GameObject prefab, GameObject parent, float x, float y, float z) {
 		var myPrefab = Instantiate(prefab, new Vector3(x, y, z), Quaternion.identity);
 		myPrefab.transform.parent = parent.transform;
+        return myPrefab;
 	}
 }
