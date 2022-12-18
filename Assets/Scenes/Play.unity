@@ -649,9 +649,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 716629938134778576, guid: 1b86372bd19dda0d6aa925fb6be3d0a0, type: 3}
+      propertyPath: m_Height
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 716629938134778579, guid: 1b86372bd19dda0d6aa925fb6be3d0a0, type: 3}
+      propertyPath: runningSpeed
+      value: 9.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 716629938134778579, guid: 1b86372bd19dda0d6aa925fb6be3d0a0, type: 3}
+      propertyPath: walkingSpeed
+      value: 5.5
+      objectReference: {fileID: 0}
     - target: {fileID: 716629938134778579, guid: 1b86372bd19dda0d6aa925fb6be3d0a0, type: 3}
       propertyPath: enableTiltToMove
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 716629939113439494, guid: 1b86372bd19dda0d6aa925fb6be3d0a0, type: 3}
       propertyPath: m_Enabled
@@ -664,6 +676,10 @@ PrefabInstance:
     - target: {fileID: 716629939113439512, guid: 1b86372bd19dda0d6aa925fb6be3d0a0, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6128614644770049918, guid: 1b86372bd19dda0d6aa925fb6be3d0a0, type: 3}
+      propertyPath: m_UseRelativeTransform
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6128614644958321879, guid: 1b86372bd19dda0d6aa925fb6be3d0a0, type: 3}
       propertyPath: m_Name
