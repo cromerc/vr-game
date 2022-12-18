@@ -68,6 +68,7 @@ public class MazeGenerator : MonoBehaviour
 
         _maze = GenerateMaze();
 
+        Vector2 playerSpawnPoint = new();
 		for (int x = 0; x < MazeSize.x; x++)
         {
 			for (int y = 0; y < MazeSize.y; y++)
@@ -85,9 +86,8 @@ public class MazeGenerator : MonoBehaviour
 				}
                 else if (_spawnPoints[x, y] == SpawnEntities.Player)
                 {
-					PlayerController.transform.SetPositionAndRotation(
-						new Vector3(y * BlockScale, 1.5f * BlockScale, x * BlockScale), Quaternion.identity
-					);
+                    playerSpawnPoint.x = x;
+                    playerSpawnPoint.y = y;
 				}
                 else if (EnemyPrefab && _spawnPoints[x, y] == SpawnEntities.Enemy)
                 {
@@ -109,6 +109,10 @@ public class MazeGenerator : MonoBehaviour
 				}
 			}
 		}
+
+        PlayerController.transform.SetPositionAndRotation(
+            new Vector3(playerSpawnPoint.y * BlockScale, 2.0f * BlockScale, playerSpawnPoint.x * BlockScale), Quaternion.identity
+        );
     }
 
     private bool[,] GenerateMaze()
