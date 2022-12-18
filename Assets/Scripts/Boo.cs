@@ -1,14 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Boo : MonoBehaviour
 {
-    public float Speed = 5.0f;
+    private float Speed = 2.0f;
+    private float RunSpeed = 4.0f;
+    private float PlayerWithinRange = 7.0f;
 
     private bool[,] _maze;
     private Vector2Int _position;
     private float _blockScale = 2.0f;
+    private Transform _player;
+    private Transform _originalTransform;
 
     private enum Direction {
         None,
@@ -30,6 +35,8 @@ public class Boo : MonoBehaviour
     void Start()
     {
         _target = transform.position;
+
+        _player = GameObject.FindWithTag("Player").GetComponent<Transform>();
 
         transform.GetChild(0).transform.GetChild(0).GetComponent<Animation>()["Take 001"].speed = 10.0f;
     }
@@ -173,12 +180,64 @@ public class Boo : MonoBehaviour
                 }
             }
 
-            transform.position = Vector3.MoveTowards(transform.position, _target, Speed * Time.deltaTime);
-            if (Vector3.Distance(transform.position, _target) < 0.001f)
-            {
-                _previousDirection = _direction;
-                _direction = Direction.None;
+            bool playerHit = false;
+            if (Physics.Linecast(GetComponent<SphereCollider>().bounds.center, _player.GetChild(0).GetComponent<MeshRenderer>().bounds.center, out RaycastHit hit)) {
+                if (hit.transform.tag == "Player") {
+                    playerHit = true;
+                }
             }
+            float dist = Vector3.Distance(_player.GetChild(0).GetComponent<MeshRenderer>().bounds.center, GetComponent<SphereCollider>().bounds.center);
+
+            if (playerHit && dist <= PlayerWithinRange)
+            {
+                if (_originalTransform == null)
+                {
+                    _originalTransform = Instantiate(transform);
+                    _originalTransform.localScale = new Vector3(0, 0, 0);
+                    _originalTransform.GetChild(1).GetComponent<Light>().enabled = false;
+                }
+                Vector3 relativePos = _player.position - transform.GetChild(0).position;
+                Quaternion rotation = Quaternion.LookRotation(relativePos, new Vector3(0, 1, 0));
+                transform.GetChild(0).rotation = rotation * Quaternion.Euler(0, 180, 0);
+                transform.position = Vector3.MoveTowards(transform.position, _player.GetChild(0).GetComponent<MeshRenderer>().bounds.center, RunSpeed * Time.deltaTime);
+            }
+            else
+            {
+                if (_originalTransform != null)
+                {
+                    // Stop following player, return to original position.
+                    Vector3 relativePos = _originalTransform.position - transform.GetChild(0).position;
+                    Quaternion rotation = Quaternion.LookRotation(relativePos, new Vector3(0, 1, 0));
+                    transform.GetChild(0).rotation = rotation * Quaternion.Euler(0, 180, 0);
+                    transform.position = Vector3.MoveTowards(transform.position, _originalTransform.position, Speed * Time.deltaTime);
+                    if (Vector3.Distance(transform.position, _originalTransform.position) < 0.001f)
+                    {
+                        _originalTransform.localScale = new Vector3(1, 1, 1);
+                        transform.position = _originalTransform.position;
+                        var outerContainer = transform.GetChild(0);
+                        outerContainer.rotation = _originalTransform.GetChild(0).rotation;
+                        outerContainer.position = _originalTransform.GetChild(0).position;
+                        Destroy(_originalTransform.gameObject);
+                    }
+                }
+                else
+                {
+                    transform.position = Vector3.MoveTowards(transform.position, _target, Speed * Time.deltaTime);
+                    if (Vector3.Distance(transform.position, _target) < 0.001f)
+                    {
+                        _previousDirection = _direction;
+                        _direction = Direction.None;
+                    }
+                }
+            }
+        }
+    }
+
+    private void OnTriggerEnter(Collider collider)
+    {
+        if (collider.tag == "Player")
+        {
+            SceneManager.LoadScene("Dead");
         }
     }
 
