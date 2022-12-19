@@ -196,19 +196,15 @@ public class Boo : MonoBehaviour
                     _originalTransform.localScale = new Vector3(0, 0, 0);
                     _originalTransform.GetChild(1).GetComponent<Light>().enabled = false;
                 }
-                Vector3 relativePos = _player.position - transform.GetChild(0).position;
-                Quaternion rotation = Quaternion.LookRotation(relativePos, new Vector3(0, 1, 0));
-                transform.GetChild(0).rotation = rotation * Quaternion.Euler(0, 180, 0);
-                transform.position = Vector3.MoveTowards(transform.position, _player.GetChild(0).GetComponent<MeshRenderer>().bounds.center, RunSpeed * Time.deltaTime);
+                transform.GetChild(0).transform.LookAt(2 * transform.GetChild(0).transform.position - _player.GetComponent<CharacterController>().bounds.center);
+                transform.position = Vector3.MoveTowards(transform.position, _player.GetComponent<CharacterController>().bounds.center, RunSpeed * Time.deltaTime);
             }
             else
             {
                 if (_originalTransform != null)
                 {
                     // Stop following player, return to original position.
-                    Vector3 relativePos = _originalTransform.position - transform.GetChild(0).position;
-                    Quaternion rotation = Quaternion.LookRotation(relativePos, new Vector3(0, 1, 0));
-                    transform.GetChild(0).rotation = rotation * Quaternion.Euler(0, 180, 0);
+                    transform.GetChild(0).transform.LookAt(2 * transform.GetChild(0).transform.position - _originalTransform.position);
                     transform.position = Vector3.MoveTowards(transform.position, _originalTransform.position, Speed * Time.deltaTime);
                     if (Vector3.Distance(transform.position, _originalTransform.position) < 0.001f)
                     {
