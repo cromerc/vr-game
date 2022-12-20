@@ -13,6 +13,9 @@ public class FpsController : MonoBehaviour
     public Camera playerCamera;
     public float lookSpeed = 10.0f;
     public float lookXLimit = 45.0f;
+    public float walkToggleAngle = 10;
+    public float runToggleAngle = 20;
+    public bool enableTiltToMove = true;
 
     CharacterController characterController;
     Vector3 moveDirection = Vector3.zero;
@@ -23,6 +26,11 @@ public class FpsController : MonoBehaviour
 
     void Start()
     {
+        if (Application.platform != RuntimePlatform.Android)
+        {
+            enableTiltToMove = false;
+        }
+
         characterController = GetComponent<CharacterController>();
 
         // Lock cursor
@@ -41,6 +49,25 @@ public class FpsController : MonoBehaviour
         float curSpeedY = canMove ? (isRunning ? runningSpeed : walkingSpeed) * Input.GetAxis("Horizontal") : 0;
         float movementDirectionY = moveDirection.y;
         moveDirection = (forward * curSpeedX) + (right * curSpeedY);
+
+        // If the player tilts his head a little then walk, or if he tilts his head more run
+        if (enableTiltToMove)
+        {
+            if (playerCamera.transform.eulerAngles.x >= runToggleAngle && playerCamera.transform.eulerAngles.x < 90.00f)
+            {
+                var cameraDirection = Camera.main.transform.forward;
+                cameraDirection.y = 0;
+                curSpeedX = runningSpeed;
+                moveDirection = (cameraDirection * curSpeedX) + (right * curSpeedY);
+            }
+            else if (playerCamera.transform.eulerAngles.x >= walkToggleAngle && playerCamera.transform.eulerAngles.x < 90.00f)
+            {
+                var cameraDirection = Camera.main.transform.forward;
+                cameraDirection.y = 0;
+                curSpeedX = walkingSpeed;
+                moveDirection = (cameraDirection * curSpeedX) + (right * curSpeedY);
+            }
+        }
 
         if (Input.GetButton("Jump") && canMove && characterController.isGrounded)
         {
