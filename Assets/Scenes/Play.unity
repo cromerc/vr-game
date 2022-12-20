@@ -402,21 +402,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 430dacdd19f1e71e594a66d7079ea1d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TrapPrefab: {fileID: 7181700912261147483, guid: 22af279ca8fbc0a838543fb28fcb87e1, type: 3}
   FloorPrefab: {fileID: 920723836579228478, guid: 635f6e1deaea192f0bc03b61320670b9, type: 3}
   WallPrefab: {fileID: 1039868420582144208, guid: b4cd006919fd84542a00627923083aa9, type: 3}
   CeilingPrefab: {fileID: 1928118502674747387, guid: 39f0c116ac29eabf294659b32e0196aa, type: 3}
   MainParent: {fileID: 1278504910}
   EnemyParent: {fileID: 158197137}
+  TrapParent: {fileID: 1278504910}
   FloorParent: {fileID: 172829507}
   WallParent: {fileID: 1962351247}
   CeilingParent: {fileID: 436931834}
   PlayerController: {fileID: 2036056312876339393}
   EnemyPrefab: {fileID: 1352214995452808518, guid: 307b9c78623e4fecfa7e9861970a1fe6, type: 3}
+  Enemies: 1
+  Traps: 1
   GenerateCeiling: 1
-  RandomCeiling: 1
-  GenerateFullCeiling: 1
-  GenerateFullFloor: 1
-  MazeSize: {x: 15, y: 15}
+  RandomCeiling: 0
+  GenerateFullCeiling: 0
+  GenerateFullFloor: 0
+  MazeSize: {x: 30, y: 30}
   BlockScale: 2
 --- !u!4 &1985135163
 Transform:

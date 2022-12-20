@@ -2,12 +2,14 @@ using UnityEngine;
 
 public class MazeGenerator : MonoBehaviour
 {
+    public GameObject TrapPrefab;
     public GameObject FloorPrefab;
     public GameObject WallPrefab;
     public GameObject CeilingPrefab;
 
     public GameObject MainParent;
     public GameObject EnemyParent;
+    public GameObject TrapParent;
     public GameObject FloorParent;
     public GameObject WallParent;
     public GameObject CeilingParent;
@@ -16,6 +18,8 @@ public class MazeGenerator : MonoBehaviour
     public GameObject EnemyPrefab;
 
     // usar un techo
+    public bool Enemies = true;
+    public bool Traps = true;
     public bool GenerateCeiling = false;
     public bool RandomCeiling = true;
     public bool GenerateFullCeiling = true;
@@ -27,11 +31,6 @@ public class MazeGenerator : MonoBehaviour
 
     // un array de tipo 2D que contiene el laberinto
     private bool[,] _maze;
-
-    // cuadros a quitar
-    private int _tilesToRemove = 1;
-
-    private int _enemiesToAdd = 1;
 
     private Vector2Int _mazeCoords = new(4, 1);
 
@@ -45,7 +44,8 @@ public class MazeGenerator : MonoBehaviour
         Player,
         Gem,
         Enemy,
-        Portal
+        Portal,
+        Trap
     }
 
     public void Start()
@@ -58,12 +58,6 @@ public class MazeGenerator : MonoBehaviour
             {
                 createCeiling = Random.value < 0.5;
             }
-        }
-
-        // asegurar que la cantidad de tiles a quitar existen en el laberinto
-        if ((MazeSize.x - 2) * (MazeSize.y - 2) < _tilesToRemove)
-        {
-            return;
         }
 
         _maze = GenerateMaze();
@@ -93,16 +87,18 @@ public class MazeGenerator : MonoBehaviour
                 {
                     var enemy = CreateChildPrefab(EnemyPrefab, EnemyParent, 0, 0, 0);
 
-                    float width = enemy.GetComponent<SphereCollider>().bounds.size.x;
-                    float length = enemy.GetComponent<SphereCollider>().bounds.size.z;
-                    width =  enemy.GetComponent<SphereCollider>().radius;
+                    float width = enemy.GetComponent<SphereCollider>().radius;
                     enemy.transform.position = new Vector3(y * BlockScale + (BlockScale / 2 - width), 1 * BlockScale, x * BlockScale + (BlockScale / 2));
                     enemy.GetComponent<Boo>().SetMaze(_maze, new Vector2Int(x, y), BlockScale);
+                }
+                else if (_spawnPoints[x, y] == SpawnEntities.Trap)
+                {
+                    CreateChildPrefab(TrapPrefab, MainParent, y * BlockScale, 4 * BlockScale, x * BlockScale);
                 }
 
 				if (createCeiling)
                 {
-                    if (!_maze[x, y] || GenerateFullCeiling)
+                    if (_spawnPoints[x, y] != SpawnEntities.Trap && (!_maze[x, y] || GenerateFullCeiling))
                     {
 					    CreateChildPrefab(CeilingPrefab, CeilingParent, y * BlockScale, 3 * BlockScale, x * BlockScale);
                     }
@@ -120,11 +116,26 @@ public class MazeGenerator : MonoBehaviour
         bool[,] maze = new bool[MazeSize.x, MazeSize.y];
         _spawnPoints = new SpawnEntities[MazeSize.x, MazeSize.y];
 
-        _tilesToRemove = Mathf.FloorToInt((MazeSize.x - 2) * (MazeSize.y - 2) * 0.40f);
-        _enemiesToAdd = Mathf.FloorToInt(_tilesToRemove * 0.01f);
-        if (_enemiesToAdd == 0)
+        int tilesToRemove = Mathf.FloorToInt((MazeSize.x - 2) * (MazeSize.y - 2) * 0.40f);
+
+        int enemiesToAdd = 0;
+        if (Enemies)
         {
-            _enemiesToAdd = 1;
+            enemiesToAdd = Mathf.FloorToInt(tilesToRemove * 0.01f);
+            if (enemiesToAdd == 0)
+            {
+                enemiesToAdd = 1;
+            }
+        }
+
+        int trapsToAdd = 0;
+        if (Traps)
+        {
+            trapsToAdd = Mathf.FloorToInt(tilesToRemove * 0.01f);
+            if (trapsToAdd == 0)
+            {
+                trapsToAdd = 1;
+            }
         }
 
         // inicializar con todos los muros
@@ -139,7 +150,7 @@ public class MazeGenerator : MonoBehaviour
 
         bool playerAdded = false;
         int tilesRemoved = 0;
-        while (tilesRemoved < _tilesToRemove)
+        while (tilesRemoved < tilesToRemove)
         {
             int xDirection = 0;
             int yDirection = 0;
@@ -177,14 +188,25 @@ public class MazeGenerator : MonoBehaviour
             }
         }
 
-        while (_enemiesToAdd > 0)
+        while (enemiesToAdd > 0)
         {
             _mazeCoords.x = Random.Range((MazeSize.x - 2) / 2, MazeSize.x - 2);
             _mazeCoords.y = Random.Range((MazeSize.y - 2) / 2, MazeSize.y - 2);
             if (_spawnPoints[_mazeCoords.x, _mazeCoords.y] == SpawnEntities.None)
             {
                 _spawnPoints[_mazeCoords.x, _mazeCoords.y] = SpawnEntities.Enemy;
-                _enemiesToAdd--;
+                enemiesToAdd--;
+            }
+        }
+
+        while (trapsToAdd > 0)
+        {
+            _mazeCoords.x = Random.Range((MazeSize.x - 2) / 8, MazeSize.x - 2);
+            _mazeCoords.y = Random.Range((MazeSize.y - 2) / 8, MazeSize.y - 2);
+            if (_spawnPoints[_mazeCoords.x, _mazeCoords.y] == SpawnEntities.None)
+            {
+                _spawnPoints[_mazeCoords.x, _mazeCoords.y] = SpawnEntities.Trap;
+                trapsToAdd--;
             }
         }
 
