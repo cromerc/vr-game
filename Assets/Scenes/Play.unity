@@ -14,7 +14,7 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
-  m_Fog: 1
+  m_Fog: 0
   m_FogColor: {r: 0, g: 0, b: 0, a: 1}
   m_FogMode: 3
   m_FogDensity: 0.1
@@ -402,6 +402,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 430dacdd19f1e71e594a66d7079ea1d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PortalPrefab: {fileID: 5219280385715840436, guid: 2632e0190acc22242853f8cdae0c8da6, type: 3}
+  GemPrefab: {fileID: 7801547171954714866, guid: 7c07269a79f993c6d9756b2e824b3ad4, type: 3}
   TrapPrefab: {fileID: 7181700912261147483, guid: 22af279ca8fbc0a838543fb28fcb87e1, type: 3}
   FloorPrefab: {fileID: 920723836579228478, guid: 635f6e1deaea192f0bc03b61320670b9, type: 3}
   WallPrefab: {fileID: 1039868420582144208, guid: b4cd006919fd84542a00627923083aa9, type: 3}
@@ -414,12 +416,12 @@ MonoBehaviour:
   CeilingParent: {fileID: 436931834}
   PlayerController: {fileID: 2036056312876339393}
   EnemyPrefab: {fileID: 1352214995452808518, guid: 307b9c78623e4fecfa7e9861970a1fe6, type: 3}
-  Enemies: 1
-  Traps: 1
-  GenerateCeiling: 1
+  Enemies: 0
+  Traps: 0
+  GenerateCeiling: 0
   RandomCeiling: 0
   GenerateFullCeiling: 0
-  GenerateFullFloor: 0
+  GenerateFullFloor: 1
   MazeSize: {x: 30, y: 30}
   BlockScale: 2
 --- !u!4 &1985135163

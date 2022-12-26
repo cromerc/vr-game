@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class MazeGenerator : MonoBehaviour
 {
+    public GameObject PortalPrefab;
+    public GameObject GemPrefab;
     public GameObject TrapPrefab;
     public GameObject FloorPrefab;
     public GameObject WallPrefab;
@@ -94,6 +96,14 @@ public class MazeGenerator : MonoBehaviour
                 else if (_spawnPoints[x, y] == SpawnEntities.Trap)
                 {
                     CreateChildPrefab(TrapPrefab, MainParent, y * BlockScale, 4 * BlockScale, x * BlockScale);
+                }
+                else if (_spawnPoints[x, y] == SpawnEntities.Gem)
+                {
+                    CreateChildPrefab(GemPrefab, MainParent, y * BlockScale, 1 * BlockScale, x * BlockScale);
+                }
+                else if (_spawnPoints[x, y] == SpawnEntities.Portal)
+                {
+                    CreateChildPrefab(PortalPrefab, MainParent, y * BlockScale, (1 * BlockScale / 2) - 0.2f, x * BlockScale);
                 }
 
 				if (createCeiling)
@@ -188,28 +198,6 @@ public class MazeGenerator : MonoBehaviour
             }
         }
 
-        while (enemiesToAdd > 0)
-        {
-            _mazeCoords.x = Random.Range((MazeSize.x - 2) / 2, MazeSize.x - 2);
-            _mazeCoords.y = Random.Range((MazeSize.y - 2) / 2, MazeSize.y - 2);
-            if (_spawnPoints[_mazeCoords.x, _mazeCoords.y] == SpawnEntities.None)
-            {
-                _spawnPoints[_mazeCoords.x, _mazeCoords.y] = SpawnEntities.Enemy;
-                enemiesToAdd--;
-            }
-        }
-
-        while (trapsToAdd > 0)
-        {
-            _mazeCoords.x = Random.Range((MazeSize.x - 2) / 8, MazeSize.x - 2);
-            _mazeCoords.y = Random.Range((MazeSize.y - 2) / 8, MazeSize.y - 2);
-            if (_spawnPoints[_mazeCoords.x, _mazeCoords.y] == SpawnEntities.None)
-            {
-                _spawnPoints[_mazeCoords.x, _mazeCoords.y] = SpawnEntities.Trap;
-                trapsToAdd--;
-            }
-        }
-
         while (true)
         {
             _mazeCoords.x = Random.Range((MazeSize.x - 2) / 8, MazeSize.x - 2);
@@ -229,6 +217,28 @@ public class MazeGenerator : MonoBehaviour
             {
                 _spawnPoints[_mazeCoords.x, _mazeCoords.y] = SpawnEntities.Portal;
                 break;
+            }
+        }
+
+        while (enemiesToAdd > 0)
+        {
+            _mazeCoords.x = Random.Range((MazeSize.x - 2) / 2, MazeSize.x - 2);
+            _mazeCoords.y = Random.Range((MazeSize.y - 2) / 2, MazeSize.y - 2);
+            if (_spawnPoints[_mazeCoords.x, _mazeCoords.y] == SpawnEntities.None)
+            {
+                _spawnPoints[_mazeCoords.x, _mazeCoords.y] = SpawnEntities.Enemy;
+                enemiesToAdd--;
+            }
+        }
+
+        while (trapsToAdd > 0)
+        {
+            _mazeCoords.x = Random.Range((MazeSize.x - 2) / 8, MazeSize.x - 2);
+            _mazeCoords.y = Random.Range((MazeSize.y - 2) / 8, MazeSize.y - 2);
+            if (_spawnPoints[_mazeCoords.x, _mazeCoords.y] == SpawnEntities.None)
+            {
+                _spawnPoints[_mazeCoords.x, _mazeCoords.y] = SpawnEntities.Trap;
+                trapsToAdd--;
             }
         }
 
