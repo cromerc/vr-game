@@ -10,7 +10,6 @@ public class Gem : MonoBehaviour
     void Start()
     {
         _portal = GameObject.FindWithTag("Portal");
-        Debug.Log("Found  portal");
     }
 
     // Update is called once per frame
