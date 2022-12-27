@@ -23,6 +23,7 @@ public class Portal : MonoBehaviour
     {
         if (_activated && collider.tag == "Player")
         {
+            TrackLevel.CurrentLevel++;
             SceneManager.LoadScene("Play");
         }
     }
