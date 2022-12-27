@@ -233,7 +233,7 @@ public class Boo : MonoBehaviour
     {
         if (collider.tag == "Player")
         {
-            SceneManager.LoadScene("Dead");
+            SceneManager.LoadScene("DeadBoo");
         }
     }
 

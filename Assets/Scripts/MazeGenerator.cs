@@ -28,7 +28,8 @@ public class MazeGenerator : MonoBehaviour
     public bool GenerateFullCeiling = true;
     public bool GenerateFullFloor = true;
     // tamaño del laberinto
-    public Vector2Int MazeSize = new(3, 3);
+    public Vector2Int MazeSize = new(10, 10);
+    public bool RandomMazeSize = true;
 
     public float BlockScale = 1.0f;
 
@@ -122,6 +123,11 @@ public class MazeGenerator : MonoBehaviour
 
     private bool[,] GenerateMaze()
     {
+        if (RandomMazeSize)
+        {
+            MazeSize.x = Random.Range(10, MazeSize.x);
+            MazeSize.y = Random.Range(10, MazeSize.y);
+        }
         bool[,] maze = new bool[MazeSize.x, MazeSize.y];
         _spawnPoints = new SpawnEntities[MazeSize.x, MazeSize.y];
 
