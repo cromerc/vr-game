@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class MazeGenerator : MonoBehaviour
 {
+    public GameObject PlayerPrefab;
     public GameObject PortalPrefab;
     public GameObject GemPrefab;
     public GameObject TrapPrefab;
@@ -15,13 +16,13 @@ public class MazeGenerator : MonoBehaviour
     public GameObject FloorParent;
     public GameObject WallParent;
     public GameObject CeilingParent;
-    public GameObject PlayerController;
 
     public GameObject EnemyPrefab;
 
     // usar un techo
     public bool Enemies = true;
     public bool Traps = true;
+    public bool Walls = true;
     public bool GenerateCeiling = false;
     public bool RandomCeiling = true;
     public bool GenerateFullCeiling = true;
@@ -74,7 +75,7 @@ public class MazeGenerator : MonoBehaviour
 				    CreateChildPrefab(FloorPrefab, FloorParent, y * BlockScale, 0 * BlockScale, x * BlockScale);
                 }
 
-				if (_maze[x, y])
+				if (Walls && _maze[x, y])
                 {
 					CreateChildPrefab(WallPrefab, WallParent, y * BlockScale, 1 * BlockScale, x * BlockScale);
 					CreateChildPrefab(WallPrefab, WallParent, y * BlockScale, 2 * BlockScale, x * BlockScale);
@@ -116,9 +117,7 @@ public class MazeGenerator : MonoBehaviour
 			}
 		}
 
-        PlayerController.transform.SetPositionAndRotation(
-            new Vector3(playerSpawnPoint.y * BlockScale, 2.0f * BlockScale, playerSpawnPoint.x * BlockScale), Quaternion.identity
-        );
+        CreateChildPrefab(PlayerPrefab, MainParent, playerSpawnPoint.y * BlockScale, 2.0f * BlockScale, playerSpawnPoint.x * BlockScale);
     }
 
     private bool[,] GenerateMaze()
