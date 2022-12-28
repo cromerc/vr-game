@@ -14,7 +14,7 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
-  m_Fog: 0
+  m_Fog: 1
   m_FogColor: {r: 0, g: 0, b: 0, a: 1}
   m_FogMode: 3
   m_FogDensity: 0.1
@@ -486,12 +486,12 @@ MonoBehaviour:
   EnemyPrefab: {fileID: 1352214995452808518, guid: 307b9c78623e4fecfa7e9861970a1fe6, type: 3}
   Enemies: 1
   Traps: 1
-  Walls: 0
-  GenerateCeiling: 0
+  Walls: 1
+  GenerateCeiling: 1
   RandomCeiling: 0
   GenerateFullCeiling: 0
   GenerateFullFloor: 1
-  MazeSize: {x: 50, y: 50}
+  MazeSize: {x: 70, y: 70}
   RandomMazeSize: 1
   BlockScale: 2
 --- !u!4 &1985135163
