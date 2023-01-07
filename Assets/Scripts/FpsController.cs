@@ -26,6 +26,11 @@ public class FpsController : MonoBehaviour
 
     void Start()
     {
+        if (Application.platform != RuntimePlatform.Android)
+        {
+            enableTiltToMove = false;
+        }
+
         characterController = GetComponent<CharacterController>();
 
         // Lock cursor
